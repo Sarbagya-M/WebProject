@@ -2,67 +2,109 @@
     <head>
         <title> Form </title>
         <style>
-            table {
-            border-collapse: collapse;
-            width: 100%;
-            }
+                body {
+                    background-color: #1f2a33;
+                    color: #fff;
+                    font-family: Arial, sans-serif;
+                    padding: 20px;
+                    
+                }
+                h1 {
+                    color: #fff;
+                    text-align: center;
+                }
 
-            th, td {
-            padding: 8px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-            border-left: 1px solid #ddd;
-            }
-        </style>
+                input[type="Name"],
+                input[type="contact"],
+                input[type="card"] {
+                    text-align:center;
+                    width: 70%;
+                    padding: 10px;
+                    margin: 10px 0;
+                    border: none;
+                    background-color: #444;
+                    color: #fff;
+                    border-radius: 12px;
+
+                }
+
+                input[type="submit"],button{
+                    background-color: #517896;
+                    color: white;
+                    padding: 10px 20px;
+                    border: none;
+                    cursor: pointer;
+                    border-radius: 4px;
+                    transition: background-color 0.3s ease;
+                }
+                div{
+                    display: flex;
+                    justify-content: center; 
+                    align-items: center;
+                    height: 70vh;
+                    
+                }
+                table {
+                    border-collapse: collapse;
+                    width: 100%;
+                }
+
+                th, td {
+                    padding: 8px;
+                    text-align: center;
+                    border: 1px solid #ddd;
+                }
+                h2{
+                    margin:0px
+                }
+           </style>
     </head>
     <body>
-        <form method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
-            <centre>
-                <b>
-                    <h1> Search Page</h1>
-                </b>
-            </centre>
-            <hr>
-            S.N. <input type="SN" name= "SN" size="20"><br /><br />
-            Name <input type="Name" name= "Name" size="20"><br /><br />
-            Contact number <input type="contact" name= "contact" size="10"><br /><br />
-            Card number <input type="card" name="card" size="5"><br /><br />
-            <centre>
-                <input type="submit" name="submit" value="Search">
-                <button type="button" name="Search" onclick="index()">Registration</button>
-            </centre>
-        </form>
+        <div>
+            <form method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
+                <centre>
+                    <b>
+                        <h1> Search Page</h1>
+                    </b>
+                </centre>
+                <hr>
+                Search by Name </br><input type="name" name= "name" size="20"><br /><br />
+                Serch by Contact number</br> <input type="contact" name= "contact" size="10"><br /><br />
+                Search by Card number </br><input type="card" name="card" size="5"><br /><br />
+                <centre>
+                    <input type="submit" name="submit" value="Search">
+                    <button type="button" name="Search" onclick="index()">Registration</button>
+                </centre>
+            </form>
+        </div>
+       
 
     </body>
     <?php
         if(isset($_POST['submit']))
         {
-            $sn = $_POST['SN'];
-            $name = $_POST['Name'];
+            $name = $_POST['name'];
             $card = $_POST['card'];
             $contact = $_POST['contact'];
-        
-            $sn = trim($sn);
+
             $name = trim($name);
             $card = trim($card);
             $contact = trim($contact);
             
             
 
-            if (empty($name) && empty($card) && empty($contact) && empty($sn)) 
+            if (empty($name) && empty($card) && empty($contact)) 
                 {
                     echo "<p>Please fill at least one of the fields.</p>";
-                    // echo "Please fill at least one of the fields.";
-                   // header("Location: index.php?error=Please fill in all the required fields."); //if want to refresh the page or move to another page
                     exit();
                 }    
             else
                 {   
                     //database information
-                    $servername = "fdb26.awardspace.net";
-                    $username = "3442939_shubhampokhrel";
-                    $password = "@12345Zxcv";
-                    $dbname = "3442939_shubhampokhrel";
+                    $servername = "localhost";
+                    $username = "root";
+                    $password = "";
+                    $dbname = "webproject";
                 
                     // Create connection
                     $conn = new mysqli($servername, $username, $password, $dbname);
@@ -73,49 +115,31 @@
                         }
 
     
-                            $sql = "SELECT * FROM DBMS WHERE ";
+                            $sql = "SELECT * FROM cust WHERE ";
                             $conditions = array();
-                            // if (empty($name) && empty($card) && !empty($contact))
-                            //     {
-                            //         // echo "search with contact";
-                            //         $conditions[] = "CONTACT_NUMBER = '$contact'";
-                            //     }
-                            // elseif(empty($name) && empty($contact) && !empty($card))
-                            //     {
-                            //         // echo "search with card";
-                            //         $conditions[] = "ID_CARD_NO = '$card'";
-                            //     } 
-                            // elseif(empty($card) && empty($contact) && !empty($name))
-                            //     {
-                            //         // echo "search with name";
-                            //         $conditions[] = "NAME LIKE '%$name%'";
-                            //     } 
+            
                                 if (!empty($contact))
                                     {
                                         // echo "search with contact";
-                                        $conditions[] = "CONTACT_NUMBER = '$contact'";
+                                        $conditions[] = "contact_number = '$contact'";
                                     }
-                                if (!empty($sn))
-                                    {
-                                        // echo "search with contact";
-                                        $conditions[] = "SN = '$sn'";
-                                    }
+                               
                                 if(!empty($card))
                                     {
                                         // echo "search with card";
-                                        $conditions[] = "ID_CARD_NO = '$card'";
+                                        $conditions[] = "card_number = '$card'";
                                     } 
                                 if(!empty($name))
                                     {
                                         // echo "search with name";
-                                        $conditions[] = "NAME LIKE '%$name%'";
+                                        $conditions[] = "name LIKE '%$name%'";
                                     } 
                               
                             $sql .= implode(' AND ', $conditions);
-                            //echo "$sql";
+                            
                             $result = $conn->query($sql);
 
-                            //$result = mysqli_query($conn,$sql) or die(mysqli_error($conn)); // SQL query executing
+                           
                             if ($result->num_rows > 0) 
                             {
                                 echo "<h2>Search Results:</h2>";
@@ -123,19 +147,19 @@
                                     <thead>
                                       <tr>
                                         <th>S.N.</th>
-                                        <th>Name</th>
-                                        <th>Card</th>
+                                        <th>name</th>
                                         <th>Contact</th>
+                                        <th>Card</th>
                                       </tr>
                                     </thead>
                                     <tbody>";
                                 
                                 while ($row = $result->fetch_assoc()) {
                                     echo "<tr>
-                                            <td>".$row['SN']."</td>
-                                            <td>".$row['NAME']."</td>
-                                            <td>".$row['ID_CARD_NO']."</td>
-                                            <td>".$row['CONTACT_NUMBER']."</td>
+                                            <td>" . $row["Id"] . "</td>
+                                            <td>".$row['name']."</td>
+                                            <td>".$row['contact_number']."</td>
+                                            <td>".$row['card_number']."</td>
                                           </tr>";
                                 }
                                 echo "</tbody>
